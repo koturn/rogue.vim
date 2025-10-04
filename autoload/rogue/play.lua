@@ -64,7 +64,7 @@ end
 
 local function doshell()
 	if vim then
-		vim.command("sh")
+		g.vim_command("sh")
 	end
 end
 

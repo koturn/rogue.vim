@@ -7,10 +7,41 @@ else
 	g.loadstring = loadstring
 end
 
+if vim.api then
+	function g.vim_beep()
+		vim.api.nvim_command('silent normal! <C-g>')
+	end
+	function g.vim_eval(var)
+		return vim.api.nvim_eval(var)
+	end
+	function g.vim_command(cmd)
+		return vim.api.nvim_command(cmd)
+	end
+elseif vim then
+	function g.vim_beep()
+		vim.beep()
+	end
+	function g.vim_eval(var)
+		return vim.eval(var)
+	end
+	function g.vim_command(cmd)
+		return vim.command(cmd)
+	end
+else
+	function g.vim_beep()
+	end
+	function g.vim_eval(var)
+		return nil
+	end
+	function g.vim_command(var)
+		return nil
+	end
+end
+
 function g.get_vim_variable(var)
 	if vim then
-		if vim.eval("exists('" .. var .. "')") ~= 0 then
-			return vim.eval(var)
+		if g.vim_eval("exists('" .. var .. "')") ~= 0 then
+			return g.vim_eval(var)
 		end
 	end
 	return ''
@@ -49,9 +80,9 @@ end
 function g.set_vim_variable(var, value)
 	if vim then
 		if type(value) == 'number' then
-			vim.command('let ' .. var .. ' = ' .. tostring(value))
+			g.vim_command('let ' .. var .. ' = ' .. tostring(value))
 		elseif type(value) == 'string' then
-			vim.command('let ' .. var .. ' = "' .. value .. '"')
+			g.vim_command('let ' .. var .. ' = "' .. value .. '"')
 		end
 	end
 end
@@ -131,7 +162,7 @@ end
 function g.strwidth(s)
 	local len
 	if vim then
-		len = vim.eval('strwidth("' .. s .. '")')
+		len = g.vim_eval('strwidth("' .. s .. '")')
 	else
 		len = #s
 	end
@@ -141,7 +172,7 @@ end
 function g.getftime(fname)
 	local t
 	if vim then
-		t = vim.eval('getftime("' .. fname .. '")')
+		t = g.vim_eval('getftime("' .. fname .. '")')
 	else
 		t = -1
 	end
@@ -169,7 +200,7 @@ end
 
 function g.msleep(n)
 	if vim then
-		vim.command('sleep ' .. tostring(n) .. 'm')
+		g.vim_command('sleep ' .. tostring(n) .. 'm')
 	end
 end
 
@@ -198,7 +229,7 @@ end
 function g.iconv_from_utf8(str)
 	if g.needs_iconv then
 		str = str:gsub("'", "''")
-		str = vim.eval("iconv('" .. str .. "', 'utf-8', s:save_encoding)")
+		str = g.vim_eval("iconv('" .. str .. "', 'utf-8', s:save_encoding)")
 	end
 	return str
 end
@@ -206,7 +237,7 @@ end
 function g.iconv_to_utf8(str)
 	if g.needs_iconv then
 		str = str:gsub("'", "''")
-		str = vim.eval("iconv('" .. str .. "', s:save_encoding, 'utf-8')")
+		str = g.vim_eval("iconv('" .. str .. "', s:save_encoding, 'utf-8')")
 	end
 	return str
 end

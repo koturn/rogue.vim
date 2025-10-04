@@ -2,7 +2,7 @@
 let s:FILE_DIR = fnamemodify(expand("<sfile>"), ':h') . '/'
 let s:FILE_DIR = substitute(s:FILE_DIR, '\\', '/', 'g')
 function! rogue#rogue#main(args)
-	if !has('lua')
+	if !has('lua') && !(has('nvim') && exists('*luaeval') && luaeval('vim.api ~= nil'))
 		echo "Sorry. Rogue.vim needs '+lua'."
 		return
 	endif

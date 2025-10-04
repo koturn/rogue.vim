@@ -38,9 +38,9 @@ local function init_dirs()
 		g.game_dir = g.game_dir:gsub('\\', '/')
 		g.game_dir = g.game_dir:gsub('~', g.home_dir)
 		if vim then
-			local exists = vim.eval('isdirectory("' .. g.game_dir .. '")')
+			local exists = g.vim_eval('isdirectory("' .. g.game_dir .. '")')
 			if exists == 0 then
-				vim.command('call mkdir("' .. g.game_dir .. '", "p")')
+				g.vim_command('call mkdir("' .. g.game_dir .. '", "p")')
 			end
 		end
 	end
@@ -118,11 +118,11 @@ local function read_mesg()
 		local needs_iconv = g.get_vim_variable("s:needs_iconv")
 		if needs_iconv ~= 0 then
 			g.needs_iconv = true
-			vim.command('let &encoding = "utf-8"')
+			g.vim_command('let &encoding = "utf-8"')
 			for k, v in pairs(g.mesg) do
 				g.mesg[k] = g.iconv_from_utf8(v)
 			end
-			vim.command('let &encoding = s:save_encoding')
+			g.vim_command('let &encoding = s:save_encoding')
 		end
 	end
 	return true
@@ -134,8 +134,8 @@ local function main()
 		return
 	end
 	if vim then
-		if vim.eval("&columns") < g.DCOLS or vim.eval("&lines") < g.DROWS then
-			vim.eval('confirm("' .. g.mesg[14] .. '")')
+		if g.vim_eval("&columns") < g.DCOLS or g.vim_eval("&lines") < g.DROWS then
+			g.vim_eval('confirm("' .. g.mesg[14] .. '")')
 			return
 		end
 	end

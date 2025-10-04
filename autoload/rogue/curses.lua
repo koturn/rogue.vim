@@ -75,7 +75,7 @@ end
 
 function g.refresh()
 	if vim then
-		vim.command("normal gg")
+		g.vim_command("normal gg")
 	end
 	local update = false
 	local done_redraw = false
@@ -87,17 +87,17 @@ function g.refresh()
 			row_str = dungeon_row(i):sub(1, dungeon_str_buffer[i].col)
 		end
 		if vim then
-			if i == g.DROWS-1 and vim.eval("&lines") == g.DROWS then
+			if i == g.DROWS-1 and g.vim_eval("&lines") == g.DROWS then
 				row_str = row_str .. dungeon_str_buffer[i].str
 				if g.update_flag or row_str ~= last_print_area then
-					vim.command("redraw")
-					print((vim.eval("has('gui_running')") ~= 0 and '' or ' ') .. row_str)
-					vim.command("redrawstatus")
+					g.vim_command("redraw")
+					print((g.vim_eval("has('gui_running')") ~= 0 and '' or ' ') .. row_str)
+					g.vim_command("redrawstatus")
 					last_print_area = row_str
 					done_redraw = true
 				end
 			else
-				if g.update_flag and i == 0 and vim.eval("&lines") > g.DROWS then
+				if g.update_flag and i == 0 and g.vim_eval("&lines") > g.DROWS then
 					print(' ')
 				end
 				if dungeon_str_buffer[i].str ~= '' then
@@ -111,7 +111,7 @@ function g.refresh()
 				if g.update_flag or row_str ~= last_row_str[i] then
 					local cmd_str
 					cmd_str = 'call setline(' .. tostring(i + 1) .. ', "' .. row_str .. '")'
-					vim.command(cmd_str)
+					g.vim_command(cmd_str)
 					last_row_str[i] = row_str
 					update = true
 				end
@@ -124,6 +124,6 @@ function g.refresh()
 	end
 	g.update_flag = false
 	if update and not done_redraw then
-		vim.command("redraw")
+		g.vim_command("redraw")
 	end
 end
