@@ -1,7 +1,8 @@
 
 let s:FILE_DIR = fnamemodify(expand("<sfile>"), ':h') . '/'
 let s:FILE_DIR = substitute(s:FILE_DIR, '\\', '/', 'g')
-function! rogue#rogue#main(args)
+let s:LUA_DIR = s:FILE_DIR . 'rogue/lua'
+function! rogue#main(args)
 	if !has('lua') && !(has('nvim') && exists('*luaeval') && luaeval('vim.api ~= nil'))
 		echo "Sorry. Rogue.vim needs '+lua'."
 		return
@@ -25,31 +26,31 @@ function! rogue#rogue#main(args)
 		endif
 	endif
 	if !resume
-		execute 'luafile ' . s:FILE_DIR . 'main.lua'
-		execute 'luafile ' . s:FILE_DIR . 'const.lua'
-		execute 'luafile ' . s:FILE_DIR . 'curses.lua'
-		execute 'luafile ' . s:FILE_DIR . 'debug.lua'
-		execute 'luafile ' . s:FILE_DIR . 'hit.lua'
-		execute 'luafile ' . s:FILE_DIR . 'init.lua'
-		execute 'luafile ' . s:FILE_DIR . 'invent.lua'
-		execute 'luafile ' . s:FILE_DIR . 'level.lua'
-		execute 'luafile ' . s:FILE_DIR . 'message.lua'
-		execute 'luafile ' . s:FILE_DIR . 'monster.lua'
-		execute 'luafile ' . s:FILE_DIR . 'move.lua'
-		execute 'luafile ' . s:FILE_DIR . 'object.lua'
-		execute 'luafile ' . s:FILE_DIR . 'pack.lua'
-		execute 'luafile ' . s:FILE_DIR . 'play.lua'
-		execute 'luafile ' . s:FILE_DIR . 'random.lua'
-		execute 'luafile ' . s:FILE_DIR . 'ring.lua'
-		execute 'luafile ' . s:FILE_DIR . 'room.lua'
-		execute 'luafile ' . s:FILE_DIR . 'save.lua'
-		execute 'luafile ' . s:FILE_DIR . 'score.lua'
-		execute 'luafile ' . s:FILE_DIR . 'spechit.lua'
-		execute 'luafile ' . s:FILE_DIR . 'throw.lua'
-		execute 'luafile ' . s:FILE_DIR . 'trap.lua'
-		execute 'luafile ' . s:FILE_DIR . 'use.lua'
-		execute 'luafile ' . s:FILE_DIR . 'util.lua'
-		execute 'luafile ' . s:FILE_DIR . 'zap.lua'
+		execute 'luafile ' . s:LUA_DIR . '/main.lua'
+		execute 'luafile ' . s:LUA_DIR . '/const.lua'
+		execute 'luafile ' . s:LUA_DIR . '/curses.lua'
+		execute 'luafile ' . s:LUA_DIR . '/debug.lua'
+		execute 'luafile ' . s:LUA_DIR . '/hit.lua'
+		execute 'luafile ' . s:LUA_DIR . '/init.lua'
+		execute 'luafile ' . s:LUA_DIR . '/invent.lua'
+		execute 'luafile ' . s:LUA_DIR . '/level.lua'
+		execute 'luafile ' . s:LUA_DIR . '/message.lua'
+		execute 'luafile ' . s:LUA_DIR . '/monster.lua'
+		execute 'luafile ' . s:LUA_DIR . '/move.lua'
+		execute 'luafile ' . s:LUA_DIR . '/object.lua'
+		execute 'luafile ' . s:LUA_DIR . '/pack.lua'
+		execute 'luafile ' . s:LUA_DIR . '/play.lua'
+		execute 'luafile ' . s:LUA_DIR . '/random.lua'
+		execute 'luafile ' . s:LUA_DIR . '/ring.lua'
+		execute 'luafile ' . s:LUA_DIR . '/room.lua'
+		execute 'luafile ' . s:LUA_DIR . '/save.lua'
+		execute 'luafile ' . s:LUA_DIR . '/score.lua'
+		execute 'luafile ' . s:LUA_DIR . '/spechit.lua'
+		execute 'luafile ' . s:LUA_DIR . '/throw.lua'
+		execute 'luafile ' . s:LUA_DIR . '/trap.lua'
+		execute 'luafile ' . s:LUA_DIR . '/use.lua'
+		execute 'luafile ' . s:LUA_DIR . '/util.lua'
+		execute 'luafile ' . s:LUA_DIR . '/zap.lua'
 	endif
 
 	silent edit `='Rogue-clone II'`

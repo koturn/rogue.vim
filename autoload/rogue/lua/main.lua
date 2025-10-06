@@ -99,9 +99,9 @@ local function read_mesg()
 	end
 	local default_f
 	if g.JAPAN then
-		default_f = 'mesg'
+		default_f = 'rogue/mesg'
 	else
-		default_f = 'mesg_E'
+		default_f = 'rogue/mesg_E'
 	end
 
 	local ret = read_mesg_file(file_dir .. default_f)
