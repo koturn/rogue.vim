@@ -7,7 +7,7 @@ end
 Rogue = {}
 local g = Rogue -- alias
 
-g.version = '1.0.2'
+g.version = '1.0.3'
 
 -- Checks added global data is Rogue only
 local function check_global()
