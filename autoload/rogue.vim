@@ -1,56 +1,78 @@
-
 let s:FILE_DIR = fnamemodify(expand("<sfile>"), ':h') . '/'
 let s:FILE_DIR = substitute(s:FILE_DIR, '\\', '/', 'g')
-let s:LUA_DIR = s:FILE_DIR . 'rogue/lua'
+let s:LUA_DIR = s:FILE_DIR . 'rogue/lua/'
 function! rogue#main(args)
-	if !has('lua') && !(has('nvim') && exists('*luaeval') && luaeval('vim.api ~= nil'))
-		echo "Sorry. Rogue.vim needs '+lua'."
+	let has_lua = has('lua') || (has('nvim') && exists('*luaeval') && luaeval('vim.api ~= nil'))
+	let has_vim9script = has('vim9script')
+	if !has_lua && !has_vim9script
+		echo "Sorry. Rogue.vim needs '+lua' or '+vim9script'."
 		return
 	endif
+
+	let use_lua = has_lua && !(has_vim9script && get(g:, 'rogue#prefer_vim9script', 0))
+
 	let resume = 0
-	if luaeval('type(Rogue)') ==# 'table' &&
-			\ luaeval('tostring(Rogue.suspended)') ==# 'true'
-		if a:args ==# '--resume'
-			let resume = 1
-		else
-			let c = confirm(luaeval('Rogue.mesg[544]'),
-							\ "&Yes\n&No\n&Cancel", 1)
-			if c == 1
+	if use_lua
+		if luaeval('type(Rogue)') ==# 'table' &&
+				\ luaeval('tostring(Rogue.suspended)') ==# 'true'
+			if a:args ==# '--resume'
 				let resume = 1
-			elseif c == 2
-				let resume = 0
 			else
-				echo luaeval('Rogue.mesg[12]')
-				return
+				let c = confirm(luaeval('Rogue.mesg[544]'),
+								\ "&Yes\n&No\n&Cancel", 1)
+				if c == 1
+					let resume = 1
+				elseif c == 2
+					let resume = 0
+				else
+					echo luaeval('Rogue.mesg[12]')
+					return
+				endif
 			endif
 		endif
-	endif
-	if !resume
-		execute 'luafile ' . s:LUA_DIR . '/main.lua'
-		execute 'luafile ' . s:LUA_DIR . '/const.lua'
-		execute 'luafile ' . s:LUA_DIR . '/curses.lua'
-		execute 'luafile ' . s:LUA_DIR . '/debug.lua'
-		execute 'luafile ' . s:LUA_DIR . '/hit.lua'
-		execute 'luafile ' . s:LUA_DIR . '/init.lua'
-		execute 'luafile ' . s:LUA_DIR . '/invent.lua'
-		execute 'luafile ' . s:LUA_DIR . '/level.lua'
-		execute 'luafile ' . s:LUA_DIR . '/message.lua'
-		execute 'luafile ' . s:LUA_DIR . '/monster.lua'
-		execute 'luafile ' . s:LUA_DIR . '/move.lua'
-		execute 'luafile ' . s:LUA_DIR . '/object.lua'
-		execute 'luafile ' . s:LUA_DIR . '/pack.lua'
-		execute 'luafile ' . s:LUA_DIR . '/play.lua'
-		execute 'luafile ' . s:LUA_DIR . '/random.lua'
-		execute 'luafile ' . s:LUA_DIR . '/ring.lua'
-		execute 'luafile ' . s:LUA_DIR . '/room.lua'
-		execute 'luafile ' . s:LUA_DIR . '/save.lua'
-		execute 'luafile ' . s:LUA_DIR . '/score.lua'
-		execute 'luafile ' . s:LUA_DIR . '/spechit.lua'
-		execute 'luafile ' . s:LUA_DIR . '/throw.lua'
-		execute 'luafile ' . s:LUA_DIR . '/trap.lua'
-		execute 'luafile ' . s:LUA_DIR . '/use.lua'
-		execute 'luafile ' . s:LUA_DIR . '/util.lua'
-		execute 'luafile ' . s:LUA_DIR . '/zap.lua'
+		if !resume
+			execute 'luafile ' . s:LUA_DIR . 'main.lua'
+			execute 'luafile ' . s:LUA_DIR . 'const.lua'
+			execute 'luafile ' . s:LUA_DIR . 'curses.lua'
+			execute 'luafile ' . s:LUA_DIR . 'debug.lua'
+			execute 'luafile ' . s:LUA_DIR . 'hit.lua'
+			execute 'luafile ' . s:LUA_DIR . 'init.lua'
+			execute 'luafile ' . s:LUA_DIR . 'invent.lua'
+			execute 'luafile ' . s:LUA_DIR . 'level.lua'
+			execute 'luafile ' . s:LUA_DIR . 'message.lua'
+			execute 'luafile ' . s:LUA_DIR . 'monster.lua'
+			execute 'luafile ' . s:LUA_DIR . 'move.lua'
+			execute 'luafile ' . s:LUA_DIR . 'object.lua'
+			execute 'luafile ' . s:LUA_DIR . 'pack.lua'
+			execute 'luafile ' . s:LUA_DIR . 'play.lua'
+			execute 'luafile ' . s:LUA_DIR . 'random.lua'
+			execute 'luafile ' . s:LUA_DIR . 'ring.lua'
+			execute 'luafile ' . s:LUA_DIR . 'room.lua'
+			execute 'luafile ' . s:LUA_DIR . 'save.lua'
+			execute 'luafile ' . s:LUA_DIR . 'score.lua'
+			execute 'luafile ' . s:LUA_DIR . 'spechit.lua'
+			execute 'luafile ' . s:LUA_DIR . 'throw.lua'
+			execute 'luafile ' . s:LUA_DIR . 'trap.lua'
+			execute 'luafile ' . s:LUA_DIR . 'use.lua'
+			execute 'luafile ' . s:LUA_DIR . 'util.lua'
+			execute 'luafile ' . s:LUA_DIR . 'zap.lua'
+		endif
+	else
+		if g:rogue#vim9#play#suspended
+			if a:args ==# '--resume'
+				let resume = 1
+			else
+				let c = confirm(g:rogue#vim9#main#mesg[544], "&Yes\n&No\n&Cancel", 1)
+				if c == 1
+					let resume = 1
+				elseif c == 2
+					let resume = 0
+				else
+					echo g:rogue#vim9#main#mesg[12]
+					return
+				endif
+			endif
+		endif
 	endif
 
 	silent edit `='Rogue-clone II'`
@@ -98,7 +120,11 @@ function! rogue#main(args)
 	endif
 
 	let s:args = a:args
-	execute 'lua Rogue.main()'
+	if use_lua
+		execute 'lua Rogue.main()'
+	else
+		call rogue#vim9#main#Main()
+	endif
 
 	let &cpo        = save_cpo
 	let &encoding   = s:save_encoding
@@ -113,3 +139,18 @@ function! rogue#main(args)
 	bdelete
 endfunction
 
+function! rogue#get_args() abort
+	return get(s:, 'args', [])
+endfunction
+
+function! rogue#get_filedir() abort
+	return s:FILE_DIR
+endfunction
+
+function! rogue#needs_iconv() abort
+	return get(s:, 'needs_iconv', 0)
+endfunction
+
+function! rogue#get_save_encoding() abort
+	return get(s:, 'save_encoding', &encoding)
+endfunction

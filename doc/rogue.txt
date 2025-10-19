@@ -131,6 +131,16 @@ The "o" command and $ROGUEOPTS are not supported.
 	Your favorite fruit.
 	default: "slime-mold"
 
+*g:rogue#prefer_vim9script*
+	If this option is set 1 and vim9script is available, the vim9script
+	implementation is used even if Lua is available.
+	default: 0
+
+*g:rogue#vim9_onload_compile*
+	If this option is set 1, each vim9script file is compiled as it is
+	loaded.
+	default: 0
+
 ------------------------------------------------------------------------------
 HIGHLIGHT GROUPS				*rogue-options-highlight*
 

@@ -29,6 +29,8 @@ Please make sure that at least one of the following conditions is met.
 
 - `:echo has('lua')` returns 1 and `:echo luaeval('_VERSION')` returns `Lua 5.1` or later.
 - `:echo has('nvim')` returns 1 and `:echo luaeval('_VERSION')` returns `Lua 5.1` or later.
+- `:echo has('vim9script')` returns 1 and `has('patch-8.2.4161')` returns 1.
+    - Recommend Vim 9.1.0850 or later, as `:class` is sufficiently supported.
 
 LuaJIT is recommended because that is very fast.
 
