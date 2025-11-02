@@ -64,7 +64,12 @@ end
 
 local function doshell()
 	if vim then
-		g.vim_command("sh")
+		if g.vim_eval("exists(':shell')") == 0 then
+			-- :shell command is removed in neovim.
+			g.message(g.mesg[545])
+		else
+			g.vim_command("sh")
+		end
 	end
 end
 

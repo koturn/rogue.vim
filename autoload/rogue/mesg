@@ -725,3 +725,7 @@ do_args()
 file: rogue.vim
 rogue#rogue#main
 544	"ゲームが中断されています。再開しますか？"	"The game is suspended. Resume it?"
+
+file: play.lua
+doshell()
+545	":sh コマンドはサポートされていません"	":sh command is not supported"
